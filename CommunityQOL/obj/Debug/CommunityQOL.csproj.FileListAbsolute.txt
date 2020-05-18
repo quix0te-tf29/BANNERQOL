@@ -1,0 +1,5 @@
+E:\Projects\BannerlordMods\CommunityQOL\Modules\CommunityQOL\bin\Win64_Shipping_Client\CommunityQOL.dll
+E:\Projects\BannerlordMods\CommunityQOL\Modules\CommunityQOL\bin\Win64_Shipping_Client\CommunityQOL.pdb
+E:\Projects\BannerlordMods\CommunityQOL\CommunityQOL\obj\Debug\CommunityQOL.csproj.CoreCompileInputs.cache
+E:\Projects\BannerlordMods\CommunityQOL\CommunityQOL\obj\Debug\CommunityQOL.dll
+E:\Projects\BannerlordMods\CommunityQOL\CommunityQOL\obj\Debug\CommunityQOL.pdb

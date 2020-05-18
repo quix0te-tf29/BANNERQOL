@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Module>
+     <Name value="Community Quality of Life Patch"/>
+     <Id value="CommunityQOL"/>
+     <Version value="v0.0.1"/>
+     <DefaultModule value="false"/>
+     <SingleplayerModule value="true"/>
+     <MultiplayerModule value="false"/>
+     <Official value="false"/>
+     <DependedModules>
+         <DependedModule Id="Native"/>
+         <DependedModule Id="SandBoxCore"/>
+         <DependedModule Id="Sandbox"/>
+         <DependedModule Id="CustomBattle"/>
+         <DependedModule Id="StoryMode" />
+     </DependedModules>
+     <SubModules>
+         <SubModule>
+             <Name value="CommunityQOL"/>
+             <DLLName value="CommunityQOL.dll"/>
+             <SubModuleClassType value="CommunityQOL.CommunityQOL"/>
+             <Tags>
+                 <Tag key="DedicatedServerType" value="none" />
+                 <Tag key="IsNoRenderModeElement" value="false" />
+             </Tags>
+         </SubModule>
+     </SubModules>
+    <Xmls>
+    </Xmls>
+ </Module>

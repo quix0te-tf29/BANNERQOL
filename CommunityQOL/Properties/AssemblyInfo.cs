@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ArmiesOfCalradia")]
+[assembly: AssemblyTitle("CommunityQOL")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ArmiesOfCalradia")]
+[assembly: AssemblyProduct("CommunityQOL")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c623135b-427a-4ede-8d08-b015a9dea6ca")]
+[assembly: Guid("0797ffc5-4bd8-4543-ac92-5357d46a029b")]
 
 // Version information for an assembly consists of the following four values:
 //

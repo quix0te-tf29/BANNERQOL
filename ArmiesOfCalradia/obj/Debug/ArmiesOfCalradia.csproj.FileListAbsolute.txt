@@ -1,8 +1,0 @@
-C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\ArmiesOfCalderia\bin\Win64_Shipping_Client\ArmiesOfCalradia.dll
-C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\ArmiesOfCalderia\bin\Win64_Shipping_Client\ArmiesOfCalradia.pdb
-C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\ArmiesOfCalradia\bin\Win64_Shipping_Client\ArmiesOfCalradia.dll
-C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\ArmiesOfCalradia\bin\Win64_Shipping_Client\ArmiesOfCalradia.pdb
-C:\Users\quix0te\source\repos\ArmiesOfCalradia\ArmiesOfCalradia\obj\Debug\ArmiesOfCalradia.csproj.CoreCompileInputs.cache
-C:\Users\quix0te\source\repos\ArmiesOfCalradia\ArmiesOfCalradia\obj\Debug\ArmiesOfCalradia.csproj.CopyComplete
-C:\Users\quix0te\source\repos\ArmiesOfCalradia\ArmiesOfCalradia\obj\Debug\ArmiesOfCalradia.dll
-C:\Users\quix0te\source\repos\ArmiesOfCalradia\ArmiesOfCalradia\obj\Debug\ArmiesOfCalradia.pdb
