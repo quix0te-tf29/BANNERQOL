@@ -46,7 +46,7 @@ namespace CommunityQOL.Behaviours {
                 this.AddRecruiterMenu(obj);
                 this.AddProcurementMenu(obj);
             } catch (Exception ex) {
-                //Dconsole.Instance().Log(this, ex.ToString());
+                DebugConsole.Log(this, ex.ToString());
             }
         }
 
