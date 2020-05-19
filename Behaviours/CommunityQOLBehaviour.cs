@@ -20,11 +20,14 @@ namespace CommunityQOL.Behaviours {
         /// </summary>
         public override void RegisterEvents() {
             //When the game first gets launched, this gets called to do some initial setup
-            CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
+            //CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, new Action<CampaignGameStarter>(this.OnSessionLaunched));
             //For the time being, this seems to be the only event that can be reliably hooked into after the player object is created to give the player starting gold
-            StoryModeEvents.OnBannerPieceCollectedEvent.AddNonSerializedListener(this, new Action(this.AddGoldOneTimeOnly));
+            //Setting player starting conditions based on player selected culture
+            StoryModeEvents.OnBannerPieceCollectedEvent.AddNonSerializedListener(this, new Action(this.SetPlayerStartingConditions));
             //The daily tick event, at this point used so I can give the player a bit of passive income to bypass the earlygame grind
-            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, new Action(this.BenefactorSupport));
+            //CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, new Action(this.BenefactorSupport));
+            // Player Level Up
+            CampaignEvents.HeroLevelledUp.AddNonSerializedListener(this, new Action<Hero, bool>(this.OnPlayerLevelUp));
         }
 
         /// <summary>
@@ -35,113 +38,144 @@ namespace CommunityQOL.Behaviours {
 
         }
 
-        /// <summary>
-        /// Gets called when the session is first launched, does some setup
-        /// </summary>
-        /// <param name="obj">Takes a CampaignGameStarter Object</param>
-        private void OnSessionLaunched(CampaignGameStarter obj) {
-            //Dconsole.Instance().Log(this, "attempting to hook menu");
-            try {
-                //attempt to add the recruiter menu
-                this.AddRecruiterMenu(obj);
-                this.AddProcurementMenu(obj);
-            } catch (Exception ex) {
-                DebugConsole.Log(this, ex.ToString());
+        ///// <summary>
+        ///// Gets called when the session is first launched, does some setup
+        ///// </summary>
+        ///// <param name="obj">Takes a CampaignGameStarter Object</param>
+        //private void OnSessionLaunched(CampaignGameStarter obj) {
+        //    //Dconsole.Instance().Log(this, "attempting to hook menu");
+        //    try {
+        //        //attempt to add the recruiter menu
+        //        this.AddRecruiterMenu(obj);
+        //        this.AddProcurementMenu(obj);
+        //    } catch (Exception ex) {
+        //        //Dconsole.Instance().Log(this, ex.ToString());
+        //    }
+        //}
+
+        //private bool addLeaveConditional(MenuCallbackArgs args) {
+        //    args.optionLeaveType = GameMenuOption.LeaveType.Leave;
+        //    return true;
+        //}
+
+        //private void switchToVillageMenu(MenuCallbackArgs args) {
+        //    GameMenu.SwitchToMenu("castle");
+        //}
+
+        ///// <summary>
+        ///// The Recruiter menu gets spliced into the game here
+        ///// </summary>
+        ///// <param name="obj"></param>
+        //public void AddRecruiterMenu(CampaignGameStarter obj) {
+        //    GameMenuOption.OnConditionDelegate recruiterDelegate = delegate (MenuCallbackArgs args) {
+        //        args.optionLeaveType = GameMenuOption.LeaveType.Recruit;
+        //        return Settlement.CurrentSettlement.OwnerClan == Clan.PlayerClan;
+        //    };
+        //    GameMenuOption.OnConsequenceDelegate recruiterConsequencesDelegate = delegate (MenuCallbackArgs args) {
+        //        GameMenu.SwitchToMenu("recruiter_hire_menu");
+        //    };
+
+        //    obj.AddGameMenu("recruiter_hire_menu", "Select a faction to recruit from.", null, GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.none);
+
+        //    //Adds "Hire A recruiter" option to town keep and castle menus
+        //    obj.AddGameMenuOption("town_keep", "recruiter_buy_recruiter", "Hire a recruiter.", recruiterDelegate, recruiterConsequencesDelegate, false, 4, false);
+        //    obj.AddGameMenuOption("castle", "recruiter_buy_recruiter", "Hire a Recruiter", recruiterDelegate, recruiterConsequencesDelegate, false, 4, false);
+
+        //    //This adds the pay menu option to the faction menu
+        //    obj.AddGameMenuOption("recruiter_hire_menu", "recruiter_pay_small", "Pay 500.", delegate (MenuCallbackArgs args)
+        //    {
+        //        args.optionLeaveType = GameMenuOption.LeaveType.Recruit;
+        //        string stringId = Settlement.CurrentSettlement.StringId;
+        //        int cost = 500;
+        //        bool flag = cost >= Hero.MainHero.Gold;
+        //        return !flag;
+        //    }, delegate (MenuCallbackArgs args)
+        //    {
+        //        string stringId = Settlement.CurrentSettlement.StringId;
+        //        int cost = 500;
+        //        bool flag = cost <= Hero.MainHero.Gold;
+        //        if (flag) {
+        //            GiveGoldAction.ApplyForCharacterToSettlement(Hero.MainHero, Settlement.CurrentSettlement, cost, false);
+        //        }
+        //        GameMenu.SwitchToMenu("castle");
+        //    }, false, -1, false);
+
+        //    obj.AddGameMenuOption("recruiter_hire_menu", "recruiter_leave", "Nevermind.", new GameMenuOption.OnConditionDelegate(this.addLeaveConditional), new GameMenuOption.OnConsequenceDelegate(this.switchToVillageMenu), false, -1, false);
+        //}
+
+        //public void AddProcurementMenu(CampaignGameStarter obj) {
+        //    GameMenuOption.OnConditionDelegate procurementDelegate = delegate (MenuCallbackArgs args) {
+        //        args.optionLeaveType = GameMenuOption.LeaveType.Trade;
+        //        return Settlement.CurrentSettlement.OwnerClan == Clan.PlayerClan;
+        //    };
+        //    GameMenuOption.OnConsequenceDelegate procurementConsequencesDelegate = delegate (MenuCallbackArgs args) {
+        //        GameMenu.SwitchToMenu("procurement_menu");
+        //    };
+
+        //    obj.AddGameMenu("procurement_menu", "Select Items to procure", null, GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.none);
+
+        //    //Adds "Procure War Materials" option to town keep
+        //    obj.AddGameMenuOption("town_keep", "procurement_menu", "Procure War Materials.", procurementDelegate, procurementConsequencesDelegate, false, 4, false);
+
+        //    obj.AddGameMenuOption("procurement_menu", "recruiter_leave", "Nevermind.", new GameMenuOption.OnConditionDelegate(this.addLeaveConditional), new GameMenuOption.OnConsequenceDelegate(this.switchToVillageMenu), false, -1, false);
+        //}
+
+        private void OnPlayerLevelUp(Hero hero, bool notsure) {
+            DebugConsole.Log(this, "Player level up");
+            DebugConsole.Log(this, hero.FirstName.ToString() + " level up: " + notsure.ToString());
+        }
+
+        private void SetPlayerStartingConditions() {
+            string PlayerCulture = Hero.MainHero.Culture.Name.ToString();
+            DebugConsole.Log(this, "Player culture is: " + PlayerCulture);
+            switch (PlayerCulture) {
+                case "Vlandia":
+                    ChangeOwnerOfSettlementAction.ApplyByDefault(Hero.MainHero, Settlement.Find("town_V7"));
+                    DebugConsole.Log(this, "Giving player city Charas town_V7");
+                    break;
+                case "Sturgia":
+                    ChangeOwnerOfSettlementAction.ApplyByDefault(Hero.MainHero, Settlement.Find("town_S5"));
+                    DebugConsole.Log(this, "Giving player city Tyal town_S5");
+                    break;
+                case "Empire":
+                    ChangeOwnerOfSettlementAction.ApplyByDefault(Hero.MainHero, Settlement.Find("town_ES4"));
+                    DebugConsole.Log(this, "Giving player city Lycaron town_ES4");
+                    break;
+                case "Aserai":
+                    ChangeOwnerOfSettlementAction.ApplyByDefault(Hero.MainHero, Settlement.Find("town_A3"));
+                    DebugConsole.Log(this, "Giving player city Iyakis town_A3");
+                    break;
+                case "Khuzait":
+                    ChangeOwnerOfSettlementAction.ApplyByDefault(Hero.MainHero, Settlement.Find("town_K2"));
+                    DebugConsole.Log(this, "Giving player city Akkalat town_K2");
+                    break;
+                case "Battania":
+                    ChangeOwnerOfSettlementAction.ApplyByDefault(Hero.MainHero, Settlement.Find("town_B4"));
+                    DebugConsole.Log(this, "Giving player city Seonon town_B4");
+                    break;
+                default:
+                    DebugConsole.Log(this, "Default");
+                    break;
             }
-        }
-
-        private bool addLeaveConditional(MenuCallbackArgs args) {
-            args.optionLeaveType = GameMenuOption.LeaveType.Leave;
-            return true;
-        }
-
-        private void switchToVillageMenu(MenuCallbackArgs args) {
-            GameMenu.SwitchToMenu("castle");
-        }
-
-        /// <summary>
-        /// The Recruiter menu gets spliced into the game here
-        /// </summary>
-        /// <param name="obj"></param>
-        public void AddRecruiterMenu(CampaignGameStarter obj) {
-            GameMenuOption.OnConditionDelegate recruiterDelegate = delegate (MenuCallbackArgs args) {
-                args.optionLeaveType = GameMenuOption.LeaveType.Recruit;
-                return Settlement.CurrentSettlement.OwnerClan == Clan.PlayerClan;
-            };
-            GameMenuOption.OnConsequenceDelegate recruiterConsequencesDelegate = delegate (MenuCallbackArgs args) {
-                GameMenu.SwitchToMenu("recruiter_hire_menu");
-            };
-
-            obj.AddGameMenu("recruiter_hire_menu", "Select a faction to recruit from.", null, GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.none);
-
-            //Adds "Hire A recruiter" option to town keep and castle menus
-            obj.AddGameMenuOption("town_keep", "recruiter_buy_recruiter", "Hire a recruiter.", recruiterDelegate, recruiterConsequencesDelegate, false, 4, false);
-            obj.AddGameMenuOption("castle", "recruiter_buy_recruiter", "Hire a Recruiter", recruiterDelegate, recruiterConsequencesDelegate, false, 4, false);
-
-            //This adds the pay menu option to the faction menu
-            obj.AddGameMenuOption("recruiter_hire_menu", "recruiter_pay_small", "Pay 500.", delegate (MenuCallbackArgs args)
-            {
-                args.optionLeaveType = GameMenuOption.LeaveType.Recruit;
-                string stringId = Settlement.CurrentSettlement.StringId;
-                int cost = 500;
-                bool flag = cost >= Hero.MainHero.Gold;
-                return !flag;
-            }, delegate (MenuCallbackArgs args)
-            {
-                string stringId = Settlement.CurrentSettlement.StringId;
-                int cost = 500;
-                bool flag = cost <= Hero.MainHero.Gold;
-                if (flag) {
-                    GiveGoldAction.ApplyForCharacterToSettlement(Hero.MainHero, Settlement.CurrentSettlement, cost, false);
-                }
-                GameMenu.SwitchToMenu("castle");
-            }, false, -1, false);
-
-            obj.AddGameMenuOption("recruiter_hire_menu", "recruiter_leave", "Nevermind.", new GameMenuOption.OnConditionDelegate(this.addLeaveConditional), new GameMenuOption.OnConsequenceDelegate(this.switchToVillageMenu), false, -1, false);
-        }
-
-        public void AddProcurementMenu(CampaignGameStarter obj) {
-            GameMenuOption.OnConditionDelegate procurementDelegate = delegate (MenuCallbackArgs args) {
-                args.optionLeaveType = GameMenuOption.LeaveType.Trade;
-                return Settlement.CurrentSettlement.OwnerClan == Clan.PlayerClan;
-            };
-            GameMenuOption.OnConsequenceDelegate procurementConsequencesDelegate = delegate (MenuCallbackArgs args) {
-                GameMenu.SwitchToMenu("procurement_menu");
-            };
-
-            obj.AddGameMenu("procurement_menu", "Select Items to procure", null, GameOverlays.MenuOverlayType.None, GameMenu.MenuFlags.none);
-
-            //Adds "Procure War Materials" option to town keep
-            obj.AddGameMenuOption("town_keep", "procurement_menu", "Procure War Materials.", procurementDelegate, procurementConsequencesDelegate, false, 4, false);
-
-            obj.AddGameMenuOption("procurement_menu", "recruiter_leave", "Nevermind.", new GameMenuOption.OnConditionDelegate(this.addLeaveConditional), new GameMenuOption.OnConsequenceDelegate(this.switchToVillageMenu), false, -1, false);
-        }
-
-        private void AddGoldOneTimeOnly() {
             InformationManager.DisplayMessage(new InformationMessage("Your Clan's benefactors supplied you with some money to aid in completing your mission", TaleWorlds.Library.Color.White, ""));
-            ChangeOwnerOfSettlementAction.ApplyByRevolt(Hero.MainHero, Settlement.Find("town_A6"));
             Hero.MainHero.ChangeHeroGold(30000);
-        }
-
-        private void BenefactorSupport() {
-            Hero.MainHero.ChangeHeroGold(600);
         }
 
         /// <summary>
         /// May Need Fixing
         /// </summary>
         /// <returns></returns>
-        public List<CultureObject> getPossibleCultures() {
-            IEnumerable<Settlement> settlements = Settlement.All;
+        //public List<CultureObject> getPossibleCultures() {
+        //    IEnumerable<Settlement> settlements = Settlement.All;
 
-            List<CultureObject> returnList = new List<CultureObject>();
-            foreach (Settlement settlement in settlements) {
-                if (!returnList.Contains(settlement.Culture)) {
-                    returnList.Add(settlement.Culture);
-                }
-            }
-            return returnList;
-        }
+        //    List<CultureObject> returnList = new List<CultureObject>();
+        //    foreach (Settlement settlement in settlements) {
+        //        if (!returnList.Contains(settlement.Culture)) {
+        //            returnList.Add(settlement.Culture);
+        //        }
+        //    }
+        //    return returnList;
+        //}
     }
 }
 

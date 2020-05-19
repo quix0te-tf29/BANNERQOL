@@ -36,7 +36,7 @@ namespace CommunityQOL
                 DebugConsole.Log(this, "Game Type is Campaign");
                 CampaignGameStarter campaignGameStarter = (CampaignGameStarter)gameStarterObject;
                 try {
-                    campaignGameStarter.AddModel(new ModifiedMarriageModel());
+                    //campaignGameStarter.AddModel(new ModifiedMarriageModel());
                     campaignGameStarter.AddBehavior(new CommunityQOLBehaviour());
                     DebugConsole.Log(this, "Mod Behavior added");
                 } catch (Exception ex) {
