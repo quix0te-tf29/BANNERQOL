@@ -1,6 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
+﻿using System.Runtime.InteropServices;
 
 namespace CommunityQOL.Classes {
     public class DebugConsole {
@@ -21,7 +19,7 @@ namespace CommunityQOL.Classes {
             AllocConsole();
         }
 
-        public static void Log(object sender, String message) {
+        public static void Log(object sender, string message) {
             if (Debugging) {
                 if (_instance == null) {
                     Instance();
