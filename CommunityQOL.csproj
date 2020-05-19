@@ -254,10 +254,10 @@
     <Compile Include="CommunityQOL.cs" />
     <Compile Include="Models\ModifiedMarriageModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Screens\testscreen.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Build\CommunityQOL\bin\Win64_Shipping_Client\" />
-    <Folder Include="Screens\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Build\CommunityQOL\SubModule.xml" />
